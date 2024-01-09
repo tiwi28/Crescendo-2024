@@ -20,7 +20,6 @@ import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
-  public Pigeon2 gyro;
   public Rotation2d orientationWhenReleased;
   private double rotationControllerSpeed = 0.0;
   public final PIDController robotRotationPID;
@@ -33,36 +32,36 @@ public class Swerve extends SubsystemBase {
   private double rollOffset = 0;
 
   /* Auto variables */
-  private PIDConstants drivePIDConstants = Constants.Swerve.drivePID;
-  private SVAConstants driveSVAConstants = Constants.Swerve.driveSVA;
-  public PIDConstants autoTranslationConstants = Constants.AutoConstants.translationPID;
-  public PIDConstants autoRotationConstants = Constants.AutoConstants.rotationPID;
+  // private PIDConstants drivePIDConstants = Constants.Swerve.drivePID;
+  // private SVAConstants driveSVAConstants = Constants.Swerve.driveSVA;
+  // public PIDConstants autoTranslationConstants = Constants.AutoConstants.translationPID;
+  // public PIDConstants autoRotationConstants = Constants.AutoConstants.rotationPID;
 
   public Swerve() {
     /* Gyro setup */
-    gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.pigeonCanBUS);
-    gyro.configFactoryDefault();
-    this.pitchOffset = gyro.getPitch();
-    this.rollOffset = gyro.getRoll();
-    zeroGyro();
+    // gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.pigeonCanBUS);
+    // gyro.configFactoryDefault();
+    // this.pitchOffset = gyro.getPitch();
+    // this.rollOffset = gyro.getRoll();
+    // zeroGyro();
 
     /* Custom PID controllers setup */
-    this.robotRotationPID = Constants.Swerve.robotRotationPID.getController();
+    // this.robotRotationPID = Constants.Swerve.robotRotationPID.getController();
     this.robotRotationPID.enableContinuousInput(-180, 180);
     this.robotRotationPID.setTolerance(2);
 
-    driveSVAConstants.sendDashboard("Module");
-    drivePIDConstants.sendDashboard("Module Velocity");
-    autoTranslationConstants.sendDashboard("Auto Translation");
-    autoRotationConstants.sendDashboard("Auto Rotation");
+    // driveSVAConstants.sendDashboard("Module");
+    // drivePIDConstants.sendDashboard("Module Velocity");
+    // autoTranslationConstants.sendDashboard("Auto Translation");
+    // autoRotationConstants.sendDashboard("Auto Rotation");
 
     /* Swerve modules setup */
-    mSwerveMods = new SwerveModule[] {
-        new SwerveModule(0, Constants.Swerve.Mod0.constants),
-        new SwerveModule(1, Constants.Swerve.Mod1.constants),
-        new SwerveModule(2, Constants.Swerve.Mod2.constants),
-        new SwerveModule(3, Constants.Swerve.Mod3.constants)
-    };
+    // mSwerveMods = new SwerveModule[] {
+    //     new SwerveModule(0, Constants.Swerve.Mod0.constants),
+    //     new SwerveModule(1, Constants.Swerve.Mod1.constants),
+    //     new SwerveModule(2, Constants.Swerve.Mod2.constants),
+    //     new SwerveModule(3, Constants.Swerve.Mod3.constants)
+    // };
 
   }
 

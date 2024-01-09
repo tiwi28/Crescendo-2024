@@ -3,7 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
+import edu.wpi.first.math.util.Units;
+import frc.lib.util.PIDConstants;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -19,7 +20,20 @@ public final class Constants {
     AMP,
     TRAP,
   }
+
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class ShooterConstants {
+    public static final int shooterMotorID = 0;
+
+    public static final PIDConstants shooterConstantsPID = new PIDConstants(0, 0, 0, Units.degreesToRadians(0))
+
+    public void stop() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'stop'");
+    } 
+
+  } 
 }
