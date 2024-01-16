@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class shootIn extends Command {
 
     public Shooter shooter;
-
+   
+      }
     public void shoot(Shooter shooter){
         this.shooter = shooter; 
+        addRequirements(shooter);
     }
 
     @Override
@@ -31,5 +33,3 @@ public class shootIn extends Command {
        shooter.stop();
     return true;
     }
-
-}
