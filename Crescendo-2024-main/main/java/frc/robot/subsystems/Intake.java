@@ -46,5 +46,6 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void stop() {
     leader.set(0)
+    
     }
 }
