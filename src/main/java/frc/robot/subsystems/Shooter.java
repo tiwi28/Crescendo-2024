@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.lib.util.PIDConstants;
+import frc.lib.util.PIDConstants;
 
 public class Shooter extends SubsystemBase{
     private double[] shooterPIDnum = Constants.ShooterConstants.shooterConstantsPID;

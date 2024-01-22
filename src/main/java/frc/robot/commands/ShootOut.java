@@ -3,24 +3,22 @@ package frc.robot.commands;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class shootIn extends Command {
+public class ShootOut extends Command {
 
     public Shooter shooter;
-   
-      }
+
     public void shoot(Shooter shooter){
         this.shooter = shooter; 
-        addRequirements(shooter);
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
+
     }
-
+    
     @Override
-    public void execute() {
-        shooter.inShooter();
-
+    public void execute(){
+        shooter.out();
     }
 
     @Override
@@ -33,3 +31,5 @@ public class shootIn extends Command {
        shooter.stop();
     return true;
     }
+
+}

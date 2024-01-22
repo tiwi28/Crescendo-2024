@@ -5,14 +5,14 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeIn {
 /** An Intake command that uses an Intake subsystem. */
   public class IntakeCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final IntakeSubsystem m_subsystem;
+    private final Intake m_subsystem;
 
   /**
    * Creates a new IntakeCommand.
@@ -31,13 +31,13 @@ public class IntakeIn {
   // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      intake.intakeIntake()
+      intake.intakeIntake();
     }
 
   // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      intake.stop()
+      intake.stop();
     }
 
   // Returns true when the command should end.
