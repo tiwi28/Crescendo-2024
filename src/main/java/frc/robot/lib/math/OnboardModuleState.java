@@ -1,4 +1,4 @@
-package frc.lib.math;
+package frc.robot.lib.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;

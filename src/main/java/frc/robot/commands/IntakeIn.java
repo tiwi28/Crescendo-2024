@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class IntakeIn {
 /** An Intake command that uses an Intake subsystem. */
   public class IntakeCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final Intake m_subsystem;
+  // @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  public Intake intake;
 
   /**
    * Creates a new IntakeCommand.

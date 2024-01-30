@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-//import frc.robot.FieldConstants;
+import frc.robot.Constants.FieldConstants;
 
 /**
  * Utility functions for flipping from the blue to red alliance. By default, all
@@ -24,38 +24,38 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
  */
 public class AllianceFlip {
 
-    /** @return Whether or not the pose should be flipped, as blue is default. */
-    private static boolean shouldFlip() {
-        return DriverStation.getAlliance() == Alliance.Red;
-    }
+  /** @return Whether or not the pose should be flipped, as blue is default. */
+  private static boolean shouldFlip() {
+    return DriverStation.getAlliance().get() == Alliance.Red;
+  }
 
-    /**
-     * Flips a translation to the correct side of the field based on the current
-     * alliance color.
-     */
-    public static Translation2d apply(Translation2d translation) {
-        if (shouldFlip())
-            return new Translation2d(
-                    FieldConstants.fieldLength - translation.getX(), FieldConstants.fieldWidth - translation.getY());
-        return translation;
-    }
+  /**
+   * Flips a translation to the correct side of the field based on the current
+   * alliance color.
+   */
+  public static Translation2d apply(Translation2d translation) {
+    if (shouldFlip())
+      return new Translation2d(
+          FieldConstants.fieldLength - translation.getX(), FieldConstants.fieldWidth - translation.getY());
+    return translation;
+  }
 
-    /** Flips a rotation based on the current alliance color. */
-    public static Rotation2d apply(Rotation2d rotation) {
-        return rotation;
+  /** Flips a rotation based on the current alliance color. */
+  public static Rotation2d apply(Rotation2d rotation) {
+    return rotation;
 
-        // if (shouldFlip())
-        // return new Rotation2d(-rotation.getCos(), rotation.getSin());
-        // return rotation;
-    }
+    // if (shouldFlip())
+    // return new Rotation2d(-rotation.getCos(), rotation.getSin());
+    // return rotation;
+  }
 
-    /**
-     * Flips a pose to the correct side of the field based on the current alliance
-     * color.
-     */
-    public static Pose2d apply(Pose2d pose) {
-        if (shouldFlip())
-            return new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()));
-        return pose;
-    }
+  /**
+   * Flips a pose to the correct side of the field based on the current alliance
+   * color.
+   */
+  public static Pose2d apply(Pose2d pose) {
+    if (shouldFlip())
+      return new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()));
+    return pose;
+  }
 }

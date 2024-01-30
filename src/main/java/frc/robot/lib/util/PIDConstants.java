@@ -1,6 +1,6 @@
 package frc.robot.lib.util;
 
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,7 +48,7 @@ public class PIDConstants {
    * 
    * @param controller Motor controller, ex. SparkMaxPIDController
    */
-  public void applyPID(SparkMaxPIDController controller) {
+  public void applyPID(SparkPIDController controller) {
     controller.setP(this.p);
     controller.setI(this.i);
     controller.setD(this.d);
@@ -79,7 +79,7 @@ public class PIDConstants {
    * 
    * @param controller Motor controller, ex. SparkMaxPIDController
    */
-  public void retrieveDashboard(SparkMaxPIDController controller) {
+  public void retrieveDashboard(SparkPIDController controller) {
     double p = SmartDashboard.getNumber(this.subscript + " P", 0.0);
     double i = SmartDashboard.getNumber(this.subscript + " I", 0.0);
     double d = SmartDashboard.getNumber(this.subscript + " D", 0.0);

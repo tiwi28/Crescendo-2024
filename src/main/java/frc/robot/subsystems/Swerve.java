@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,14 +14,15 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.PIDConstants;
-import frc.lib.util.SVAConstants;
-import frc.lib.util.SwerveModule;
+import frc.robot.lib.util.PIDConstants;
+import frc.robot.lib.util.SVAConstants;
+import frc.robot.lib.util.SwerveModule;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
   public Rotation2d orientationWhenReleased;
+  public Pigeon2 gyro;
   private double rotationControllerSpeed = 0.0;
   public final PIDController robotRotationPID;
   private boolean wasRotationZero = true;
@@ -32,38 +34,38 @@ public class Swerve extends SubsystemBase {
   private double rollOffset = 0;
 
   /* Auto variables */
-  // private PIDConstants drivePIDConstants = Constants.Swerve.drivePID;
-  // private SVAConstants driveSVAConstants = Constants.Swerve.driveSVA;
-  // public PIDConstants autoTranslationConstants = Constants.AutoConstants.translationPID;
-  // public PIDConstants autoRotationConstants = Constants.AutoConstants.rotationPID;
+  private PIDConstants drivePIDConstants = Constants.Swerve.drivePID;
+  private SVAConstants driveSVAConstants = Constants.Swerve.driveSVA;
+  public PIDConstants autoTranslationConstants = Constants.AutoConstants.translationPID;
+  public PIDConstants autoRotationConstants = Constants.AutoConstants.rotationPID;
 
   public Swerve() {
     /* Gyro setup */
-    // gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.pigeonCanBUS);
-    // gyro.configFactoryDefault();
-    // this.pitchOffset = gyro.getPitch();
-    // this.rollOffset = gyro.getRoll();
-    // zeroGyro();
+    gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.pigeonCanBUS);
+    var gyroConfig = new Pigeon2Configuration();
+    gyro.getConfigurator().apply(gyroConfig);
+    this.pitchOffset = gyro.getPitch().getValueAsDouble();
+    this.rollOffset = gyro.getRoll().getValueAsDouble();
+    zeroGyro();
 
     /* Custom PID controllers setup */
-    // this.robotRotationPID = Constants.Swerve.robotRotationPID.getController();
+    this.robotRotationPID = Constants.Swerve.robotRotationPID.getController();
     this.robotRotationPID.enableContinuousInput(-180, 180);
     this.robotRotationPID.setTolerance(2);
 
-    // driveSVAConstants.sendDashboard("Module");
-    // drivePIDConstants.sendDashboard("Module Velocity");
-    // autoTranslationConstants.sendDashboard("Auto Translation");
-    // autoRotationConstants.sendDashboard("Auto Rotation");
+    driveSVAConstants.sendDashboard("Module");
+    drivePIDConstants.sendDashboard("Module Velocity");
+    autoTranslationConstants.sendDashboard("Auto Translation");
+    autoRotationConstants.sendDashboard("Auto Rotation");
 
     /* Swerve modules setup */
-    // mSwerveMods = new SwerveModule[] {
-    //     new SwerveModule(0, Constants.Swerve.Mod0.constants),
-    //     new SwerveModule(1, Constants.Swerve.Mod1.constants),
-    //     new SwerveModule(2, Constants.Swerve.Mod2.constants),
-    //     new SwerveModule(3, Constants.Swerve.Mod3.constants)
-    // };
-
-  }
+    mSwerveMods = new SwerveModule[] {
+        new SwerveModule(0, Constants.Swerve.Mod0.constants),
+        new SwerveModule(1, Constants.Swerve.Mod1.constants),
+        new SwerveModule(2, Constants.Swerve.Mod2.constants),
+        new SwerveModule(3, Constants.Swerve.Mod3.constants)
+    };
+    } 
 
   /**
    * Updates the robots position hold target when the rotation axis is not being
@@ -293,8 +295,8 @@ public class Swerve extends SubsystemBase {
    */
   public Rotation2d getYaw() {
     return (Constants.Swerve.invertGyro)
-        ? Rotation2d.fromDegrees(360 - gyro.getYaw())
-        : Rotation2d.fromDegrees(gyro.getYaw());
+        ? Rotation2d.fromDegrees(360 - gyro.getYaw().getValueAsDouble())
+        : Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
   }
 
   /**
@@ -303,11 +305,11 @@ public class Swerve extends SubsystemBase {
    * @return the pitch of the robot
    */
   public Rotation2d getPitch() {
-    return Rotation2d.fromDegrees(gyro.getPitch() - this.pitchOffset);
+    return Rotation2d.fromDegrees(gyro.getPitch().getValueAsDouble() - this.pitchOffset);
   }
 
   public Rotation2d getRoll() {
-    return Rotation2d.fromDegrees(gyro.getRoll() - this.rollOffset);
+    return Rotation2d.fromDegrees(gyro.getRoll().getValueAsDouble() - this.rollOffset);
   }
 
   public void resetCoR() {

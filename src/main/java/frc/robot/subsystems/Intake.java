@@ -1,14 +1,18 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax leader = new CANSparkMax(1, MotorType.kBrushless);
   private final CANSparkMax follower = new CANSparkMax(2, MotorType.kBrushless);
-  private final double[] intakePIDnum = Constants.IntakeConstants.intakeConstantsPID;
+  // private final double[] intakePIDnum = IntakeConstants.intakeConstantsPID;
 
   public Intake() {
     leader.restoreFactoryDefaults();
@@ -20,12 +24,12 @@ public class Intake extends SubsystemBase {
     follower.setSmartCurrentLimit(40);
     follower.setIdleMode(IdleMode.kCoast);
     follower.enableVoltageCompensation(12);
-    follower.follow();
+    follower.follow(leader);
 
 
   }
 
-  private PIDController intakePID = new PIDController(intakePIDnum[0], intakePIDnum[1], intakePIDnum[2]);
+  private PIDController intakePID = IntakeConstants.intakeConstantsPID.getController();
   private double setpoint;
 //   public Command intakeMethodCommand() {}
 
@@ -39,12 +43,11 @@ public class Intake extends SubsystemBase {
     return false;
   }
 
-  @Override
+
   public void intakeIntake() {
-    leader.set(intakePID.calculate(Constants.IntakeConstants.inEncoder.getDistance, setpoint));
+    leader.set(intakePID.calculate(IntakeConstants.inEncoder.getDistance(), setpoint));
   }
 
-  @Override
   public void stop() {
     leader.set(0);
     

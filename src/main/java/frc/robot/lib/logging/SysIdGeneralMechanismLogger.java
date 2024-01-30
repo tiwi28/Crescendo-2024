@@ -1,4 +1,4 @@
-package frc.lib.logging;
+package frc.robot.lib.logging;
 
 public class SysIdGeneralMechanismLogger extends SysIdLogger {
     private double primaryMotorVoltage = 0.0;

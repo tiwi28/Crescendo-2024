@@ -14,20 +14,20 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.lib.util.PIDConstants;
+import frc.robot.lib.util.PIDConstants;
 
 public class Shooter extends SubsystemBase{
-    private double[] shooterPIDnum = Constants.ShooterConstants.shooterConstantsPID;
+    // private double[] shooterPIDnum = Constants.ShooterConstants.shooterConstantsPID;
     private CANSparkMax shooterMotor = new CANSparkMax(Constants.ShooterConstants.shooterMotorID, MotorType.kBrushless);
-    private PIDController shooterPID = new PIDController(shooterPIDnum[0], shooterPIDnum[1], shooterPIDnum[2]);
+    private PIDController shooterPID = ShooterConstants.shooterConstantsPID.getController();
     private double setpoint;
     
 
-    public void out() {
+    public void shoot() {
         shooterMotor.set(shooterPID.calculate(Constants.ShooterConstants.shootEncoder.getDistance(), setpoint));
     }
 
-    public void inShooter() {
+    public void feed() {
         shooterMotor.set(-shooterPID.calculate(Constants.ShooterConstants.shootEncoder.getDistance(), setpoint));
     }
 

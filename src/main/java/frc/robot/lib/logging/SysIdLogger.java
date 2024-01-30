@@ -1,6 +1,6 @@
 // Source: https://github.com/FRC6498/2023ChargedUp/blob/sysid/src/main/java/frc/robot/SysId/Logging
 
-package frc.lib.logging;
+package frc.robot.lib.logging;
 
 import java.util.ArrayList;
 import java.util.List;
