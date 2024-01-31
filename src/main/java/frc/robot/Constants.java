@@ -70,6 +70,7 @@ public final class Constants {
 
   public static final class Operators {
     public static final int driver = 0;
+    public static final int operator = 1;
   }
 
   public static final class FieldConstants {
@@ -117,10 +118,14 @@ public final class Constants {
   
   public static final class ShooterConstants {
     //ID's
-    public static final int shooterMotorID = 0;
+    public static final int shooterLeaderID = 0;
+    public static final int shooterFollowerID = 0;
+    public static final int feederID = 0;
     public static final Encoder shootEncoder = new Encoder(null, null);
     //PID
     public static final PIDConstants shooterConstantsPID = new PIDConstants(0, 0, 0);
+    public static final PIDConstants feederConstantsPID = new PIDConstants(0,0,0);
+    public static final SVAConstants shooterConstantsFF = new SVAConstants(0, 0, 0);
   }
 
   // public static final class Wrist {
