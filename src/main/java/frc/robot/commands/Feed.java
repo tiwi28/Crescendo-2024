@@ -1,15 +1,20 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Shooter;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Feed extends Command {
 
     public Shooter shooter;
+    private DoubleSupplier speedDoubleSupplier;
    
       
-    public void shoot(Shooter shooter){
-        this.shooter = shooter; 
+    public void feed(DoubleSupplier m_speedDoubleSupplier, Shooter shooter){
+        this.shooter = shooter;
+        this.speedDoubleSupplier = m_speedDoubleSupplier; 
         addRequirements(shooter);
     }
 
@@ -19,13 +24,14 @@ public class Feed extends Command {
 
     @Override
     public void execute() {
-        shooter.feed();
+        var speed = speedDoubleSupplier.getAsDouble();
+        shooter.feed(speed);
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.stop(); 
+         
     }
 
     @Override

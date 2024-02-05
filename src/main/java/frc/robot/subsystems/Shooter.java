@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
@@ -19,18 +20,21 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.lib.util.PIDConstants;
 
 public class Shooter extends SubsystemBase{
-    // init of motors and pidcontrollers
+    /* init of motors and pidcontrollers */
     private CANSparkMax leader = new CANSparkMax(Constants.ShooterConstants.shooterLeaderID, MotorType.kBrushless);
     private CANSparkMax follower = new CANSparkMax(Constants.ShooterConstants.shooterFollowerID, MotorType.kBrushless);
     private CANSparkMax feeder = new CANSparkMax(Constants.ShooterConstants.feederID, MotorType.kBrushless);
     
-    private PIDController shooterPID = ShooterConstants.shooterConstantsPID.getController();
-    private PIDController feederPID = ShooterConstants.feederConstantsPID.getController();
+    /*PIDFF and stuff I've never done before */
+    // private PIDController shooterPID = ShooterConstants.shooterConstantsPID.getController();
+    private ProfiledPIDController shooterPID = ShooterConstants.shooterConstantsPID.getController();
     private SimpleMotorFeedforward shooterFF = ShooterConstants.shooterConstantsFF.getController();
+    // private PIDController feederPID = ShooterConstants.feederConstantsPID.getController();
     // private double setpoint;
     
     public Shooter() {
     
+    leader.restoreFactoryDefaults();
     leader.setSmartCurrentLimit(40);
     leader.setIdleMode(IdleMode.kCoast);
     leader.enableVoltageCompensation(12);
@@ -39,15 +43,16 @@ public class Shooter extends SubsystemBase{
     follower.setSmartCurrentLimit(40);
     follower.setIdleMode(IdleMode.kCoast);
     follower.enableVoltageCompensation(12);
+    follower.follow(leader);
 
     
     }
     public void shoot(double setpoint) {
-        leader.setVoltage(shooterPID.calculate(Constants.ShooterConstants.shootEncoder.getDistance(), setpoint) + shooterFF.calculate(0, 0, 0));
+        leader.set(shooterPID.calculate(Constants.ShooterConstants.shootEncoder.getDistance(), setpoint) + shooterFF.calculate(0, 0, 0));
     }
 
-    public void feed(double setpoint) {
-        feeder.set(feederPID.calculate(Constants.ShooterConstants.shootEncoder.getDistance(), setpoint));
+    public void feed(double speed) {
+        feeder.set(speed);
     }
 
     public void stop() {

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -30,6 +31,7 @@ public class Intake extends SubsystemBase {
   }
 
   private PIDController intakePID = IntakeConstants.intakeConstantsPID.getController();
+  private SimpleMotorFeedforward intakeFF = IntakeConstants.intakeConstantsFF.getController();
   private double setpoint;
 //   public Command intakeMethodCommand() {}
 
@@ -45,7 +47,7 @@ public class Intake extends SubsystemBase {
 
 
   public void intakeIntake() {
-    leader.set(intakePID.calculate(IntakeConstants.inEncoder.getDistance(), setpoint));
+    leader.set(intakePID.calculate(IntakeConstants.inEncoder.getDistance(), setpoint) + intakeFF.calculate(0,0));
   }
 
   public void stop() {

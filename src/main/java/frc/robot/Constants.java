@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import frc.robot.lib.util.SVAConstants;
 import frc.robot.lib.util.SwerveModuleConstants;
 import frc.robot.lib.util.PIDConstants;
+import frc.robot.lib.util.ProfiledPIDConstants;
 
 public final class Constants {
   // public static enum PieceType {
@@ -109,6 +110,7 @@ public final class Constants {
   public static final class IntakeConstants {
     //PIDFF
     public static final PIDConstants intakeConstantsPID = new PIDConstants(0, 0, 0);
+    public static final SVAConstants intakeConstantsFF = new SVAConstants(0, 0, 0);
     
     // ID's + Encoder
     public static final int intakeLeaderID = 1;
@@ -123,7 +125,7 @@ public final class Constants {
     public static final int feederID = 0;
     public static final Encoder shootEncoder = new Encoder(null, null);
     //PID
-    public static final PIDConstants shooterConstantsPID = new PIDConstants(0, 0, 0);
+    public static final ProfiledPIDConstants shooterConstantsPID = new ProfiledPIDConstants(0, 0, 0, 0, 0);
     public static final PIDConstants feederConstantsPID = new PIDConstants(0,0,0);
     public static final SVAConstants shooterConstantsFF = new SVAConstants(0, 0, 0);
   }
