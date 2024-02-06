@@ -1,17 +1,23 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.util.PIDConstants;
@@ -29,6 +35,9 @@ public class Swerve extends SubsystemBase {
   private boolean wasTranslationZero = true;
   private long defenseDelayStart;
   private Translation2d centerOfRotation = new Translation2d();
+  private Swerve swerve;
+  private SwerveDriveOdometry odometry;
+  private SwerveDriveKinematics kinematics;
 
   private double pitchOffset = 0;
   private double rollOffset = 0;
@@ -65,6 +74,30 @@ public class Swerve extends SubsystemBase {
         new SwerveModule(2, Constants.Swerve.Mod2.constants),
         new SwerveModule(3, Constants.Swerve.Mod3.constants)
     };
+    AutoBuilder.configureHolonomic(
+    this::getPose, // Robot pose supplier
+    this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+    this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    Constants.Swerve.holonomicConfig = new HolonomicPathFollowerConfig(
+      new com.pathplanner.lib.util.PIDConstants(0,0,0),
+      new com.pathplanner.lib.util.PIDConstants(0,0,0),
+      0.1,
+      0.1,
+      new ReplanningConfig()
+    ),
+    () -> {
+      // Boolean supplier that controls when the path will be mirrored for the red alliance
+      // This will flip the path being followed to the red side of the field.
+      // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      var alliance = DriverStation.getAlliance();
+      if (alliance.isPresent()) {
+        return alliance.get() == DriverStation.Alliance.Red;
+      }
+      return false;
+    },
+    this.swerve // Reference to this subsystem to set requirements
+    );
     } 
 
   /**
@@ -79,6 +112,22 @@ public class Swerve extends SubsystemBase {
     }
 
     this.rotationControllerSpeed = rotation;
+  }
+ 
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+  public void resetPose(Pose2d pose) {
+    odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
+  }
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds(getStates());
+  }
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+    setModuleStates(targetStates);
   }
 
   /**
