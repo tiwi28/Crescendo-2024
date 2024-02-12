@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.MatBuilder;
@@ -180,6 +181,8 @@ public final class Constants {
     /* Drive Controls */
     public static final double stickDeadband = 0.1;
 
+    /* Auto Constants */
+    public static HolonomicPathFollowerConfig holonomicConfig;
     /* Gyro */
     public static final int pigeonID = 21;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-

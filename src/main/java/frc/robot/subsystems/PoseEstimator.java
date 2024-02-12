@@ -23,10 +23,12 @@ public class PoseEstimator extends SubsystemBase {
   // private final PhotonCamera rightCamera;
   // private final PhotonCamera leftCamera;
 
+
   public PoseEstimator(Swerve swerve) {
     this.swerve = swerve;
     // this.rightCamera = rightCamera;
     // this.leftCamera = leftCamera;
+    SmartDashboard.putData("field", field2d);
 
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -115,5 +117,7 @@ public class PoseEstimator extends SubsystemBase {
 
   public void resetFieldPosition() {
     setCurrentPose(new Pose2d());
+    // field.setRobotPose(.getPoseMeters());
+
   }
 }
