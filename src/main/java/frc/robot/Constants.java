@@ -18,6 +18,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import frc.robot.lib.util.SVAConstants;
@@ -84,7 +85,8 @@ public final class Constants {
   public static final class Arm {
     public static final int leaderMotorID = 31;
     public static final int followerMotorID = 32;
-    public static final int encoderDIOPort = 0;
+   
+     public static final int armEncoderDIOPort = 0;
     public static final double encoderOffset = Units.degreesToRadians(83.6 + 6.2 + 6.6 + 5.3); // En`coder reading when
                                                                                                // the
     // arm is
@@ -128,6 +130,14 @@ public final class Constants {
     public static final ProfiledPIDConstants shooterConstantsPID = new ProfiledPIDConstants(0, 0, 0, 0, 0);
     public static final PIDConstants feederConstantsPID = new PIDConstants(0,0,0);
     public static final SVAConstants shooterConstantsFF = new SVAConstants(0, 0, 0);
+
+    public static final int id = 5;
+    public static final double[] shooterPID = { 0, 0, 0 };
+    public static final double[] shooterFeedforward = { 0, 0 };
+    public static final int toleranceRPM = 10;
+    public static final double maxVelocityPerSecond = 2000; // RPM/s
+    public static final double maxAcceleration = 700; // RPM/s^2
+
   }
 
   // public static final class Wrist {
@@ -327,4 +337,6 @@ public final class Constants {
     public static final double darkGreen = 0.75;
     public static final double green = 0.77;
   }
+
+ 
 }
