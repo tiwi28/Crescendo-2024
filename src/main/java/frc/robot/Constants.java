@@ -28,6 +28,9 @@ import frc.robot.lib.util.PIDConstants;
 import frc.robot.lib.util.ProfiledPIDConstants;
 
 public final class Constants {
+
+  public static boolean enableTunableValues = true;
+  
   // public static enum PieceType {
   //   CONE,
   //   CUBE,

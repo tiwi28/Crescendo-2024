@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import frc.robot.lib.logging.LoggedTunableNumber;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.lib.util.PIDConstants;
@@ -31,6 +33,7 @@ public class Shooter extends SubsystemBase{
     /* init of motors and pidcontrollers */
     private CANSparkMax leader = new CANSparkMax(Constants.ShooterConstants.shooterLeaderID, MotorType.kBrushless);
     private CANSparkMax follower = new CANSparkMax(Constants.ShooterConstants.shooterFollowerID, MotorType.kBrushless);
+    private final RelativeEncoder shootEncoder = leader.getEncoder();
     private CANSparkMax feeder = new CANSparkMax(Constants.ShooterConstants.feederID, MotorType.kBrushless);
     
     /*PIDFF and stuff I've never done before */
@@ -39,8 +42,22 @@ public class Shooter extends SubsystemBase{
     private SimpleMotorFeedforward shooterFF = ShooterConstants.shooterConstantsFF.getController();
     // private PIDController feederPID = ShooterConstants.feederConstantsPID.getController();
 
-    private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
-    private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+    // private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
+    // private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+
+    private double velocitySetpoint = 0;
+    private double velocityRateOfChange = 0;
+
+    private LoggedTunableNumber shooterKp = new LoggedTunableNumber("shooterKp",
+    Constants.ShooterConstants.shooterPID[0]);
+private LoggedTunableNumber shooterKi = new LoggedTunableNumber("shooterKi",
+    Constants.ShooterConstants.shooterPID[1]);
+private LoggedTunableNumber shooterKd = new LoggedTunableNumber("shooterKd",
+    Constants.ShooterConstants.shooterPID[2]);
+private LoggedTunableNumber shooterKs = new LoggedTunableNumber("shooterKs",
+    Constants.ShooterConstants.shooterFeedforward[0]);
+private LoggedTunableNumber shooterKv = new LoggedTunableNumber("shooterKv",
+    Constants.ShooterConstants.shooterFeedforward[1]);
     
     public Shooter() {
          
@@ -55,9 +72,10 @@ public class Shooter extends SubsystemBase{
     follower.enableVoltageCompensation(12);
     follower.follow(leader);
 
-    //  encoder.setVelocityConversionFactor(1);
+    setupMotor();
+     shootEncoder.setVelocityConversionFactor(1);
     
-    // profile.calculate(5, m_setpoint, m_goal);
+    //profile.calculate(5, m_setpoint, m_goal);
     
     }
     public void shoot(double setpoint) {
@@ -69,15 +87,10 @@ public class Shooter extends SubsystemBase{
     }
 
   public void setupMotor() {
-    leader.restoreFactoryDefaults();
-    leader.setInverted(false);
-    leader.enableVoltageCompensation(12.0);
-    leader.setSmartCurrentLimit(40);
- // TODO: don't know what it will be
 
-    pid.setP(Constants.ShooterConstants.shooterPID[0]);
-    pid.setI(Constants.ShooterConstants.shooterPID[1]);
-    pid.setD(Constants.ShooterConstants.shooterPID[2]);
+    shooterPID.setP(Constants.ShooterConstants.shooterPID[0]);
+    shooterPID.setI(Constants.ShooterConstants.shooterPID[1]);
+    shooterPID.setD(Constants.ShooterConstants.shooterPID[2]);
   }
 
   public void checkTunableValues() {
@@ -85,12 +98,12 @@ public class Shooter extends SubsystemBase{
       return;
 
     if (shooterKp.hasChanged() || shooterKi.hasChanged() || shooterKd.hasChanged()) {
-      pid.setP(shooterKp.get());
-      pid.setI(shooterKi.get());
-      pid.setD(shooterKd.get());
+      shooterPID.setP(shooterKp.get());
+      shooterPID.setI(shooterKi.get());
+      shooterPID.setD(shooterKd.get());
     }
     if (shooterKs.hasChanged() || shooterKv.hasChanged()) {
-      ffModel = new SimpleMotorFeedforward(shooterKs.get(), shooterKv.get());
+      shooterFF = new SimpleMotorFeedforward(shooterKs.get(), shooterKv.get());
     }
   }
 
@@ -104,7 +117,7 @@ public class Shooter extends SubsystemBase{
   }
 
   public double getActualRPM() {
-    return encoder.getVelocity();
+    return shootEncoder.getVelocity();
   }
 
   public double getDesiredRPM() {
@@ -127,8 +140,8 @@ public class Shooter extends SubsystemBase{
 
   @Override
   public void periodic() {
-    double feedforward = ffModel.calculate(velocitySetpoint, velocityRateOfChange);
-    pid.setReference(velocitySetpoint, ControlType.kVelocity, 0, feedforward);
+    double feedforward = shooterFF.calculate(velocitySetpoint, velocityRateOfChange);
+    shooterPID.setReference(velocitySetpoint, ControlType.kVelocity, 0, feedforward);
 
     checkTunableValues();
     logValues();
